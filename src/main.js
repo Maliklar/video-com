@@ -3,9 +3,6 @@ import App from './App.vue'
 import store from './store'
 
 
-
-
-
 // Initialize Firebase
 
 // async function m() {
@@ -24,6 +21,9 @@ import store from './store'
 
 // console.log(m());
 
+import globalMixin from "./scripts/global_mixin";
+
 
 createApp(App).use(store)
+    .mixin(globalMixin)
     .mount('#app');

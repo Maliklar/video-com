@@ -18,9 +18,6 @@ export default {
   async created() {
     this.userId = uuidv4();
 
-    this.peerConnection = new RTCPeerConnection();
-    this.dataChannel = this.peerConnection.createDataChannel("Data Channel");
-
     this.dataChannel.onmessage = (e) => {
       console.log("Message Received: " + e.data);
     };
@@ -44,8 +41,6 @@ export default {
 
   data() {
     return {
-      peerConnection: null,
-      dataChannel: null,
       userId: null,
       userDocument: null,
     };
@@ -58,6 +53,7 @@ export default {
     },
     async connect() {
       console.log("Searching for Offers");
+
       // searching for peer
       const q = this.$store.state.query(
         this.$store.state.collection(this.$store.state.db, "Queue"),

@@ -5,17 +5,7 @@
     </div>
     <div class="chat-container">
       <div class="chat-display">
-        <div class="chat-box">Hello1</div>
-        <div class="chat-box">Hello2</div>
-        <div class="chat-box">Hello3</div>
-        <div class="chat-box">Hello4</div>
-        <div class="chat-box">Hello5</div>
-        <div class="chat-box">Hello6</div>
-        <div class="chat-box">Hello7</div>
-        <div class="chat-box">Hello8</div>
-        <div class="chat-box">Hello9</div>
-        <div class="chat-box">Hello10</div>
-        <div class="chat-box">Hello11</div>
+        <MessageBox />
       </div>
       <div class="text-input-container">
         <input type="text" placeholder="Send Message" id="chat-input" />
@@ -26,7 +16,10 @@
 </template>
 
 <script>
-export default {};
+import MessageBox from "./MessageBox.vue";
+export default {
+  components: { MessageBox },
+};
 </script>
 
 <style>
@@ -64,7 +57,8 @@ export default {};
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 38% 62%;
-  max-height: 100vh;
+  height: 100vh;
+  background-color: black;
 }
 
 #chat-input {
