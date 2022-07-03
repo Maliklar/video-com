@@ -10,20 +10,31 @@
 <script>
 export default {
   methods: {
+    // updateDocumentState(documentId) {
+    //   this.$store.state.updateDoc(
+    //     this.$store.state.doc(this.$store.state.db, "Queue", documentId),
+    //     {
+    //       active: false,
+    //     }
+    //   );
+    // },
+    // waitForResponse(documentId) {
+    //   const callIcon = document.getElementById("call-icon");
+    //   callIcon.style.display = "none";
+    //   let seconds = 0;
+    //   const waitingInterval = setInterval(() => {
+    //     seconds++;
+    //     this.$store.state.callState.innerHTML = "Wait " + seconds + " s";
+    //     if (seconds == 30) {
+    //       this.$store.state.callState.innerHTML = "No One found";
+    //       callIcon.style.display = "block";
+    //       this.updateDocumentState(documentId);
+    //       clearInterval(waitingInterval);
+    //     }
+    //   }, 1000);
+    // },
     async connect() {
-      const callIcon = document.getElementById("call-icon");
-      callIcon.style.display = "none";
-      let seconds = 0;
-      const waitingInterval = setInterval(() => {
-        seconds++;
-        this.$store.state.callState.innerHTML = "Wait " + seconds + " s";
-        if (seconds == 10) {
-          this.$store.state.callState.innerHTML = "No One found";
-          callIcon.style.display = "block";
-
-          clearInterval(waitingInterval);
-        }
-      }, 1000);
+      this.$store.state.callState = "calling";
       // searching for peer
       const q = this.$store.state.query(
         this.$store.state.collection(this.$store.state.db, "Queue"),
@@ -50,14 +61,17 @@ export default {
                   sdp: JSON.stringify(
                     this.$store.state.peerConnection.localDescription
                   ),
+                  active: true,
                   type: "offer",
                 }
               );
               console.log("Document written with ID: ", docRef.id);
+              this.$store.state.documentId = docRef.id;
               this.userDocument = docRef.id;
             } catch (e) {
               console.error("Error adding document: ", e);
             }
+            // this.waitForResponse(this.userDocument);
 
             // Wait for an answer
             this.$store.state.onSnapshot(
@@ -82,7 +96,7 @@ export default {
       } else {
         const random = Math.floor(Math.random() * querySnapshot.docs.length);
         const document = querySnapshot.docs[random].data();
-        const documentId = querySnapshot.docs[random].id;
+        this.$store.state.documentId = querySnapshot.docs[random].id;
 
         const sdp = JSON.parse(document.sdp);
         this.$store.state.peerConnection.setRemoteDescription(sdp);
@@ -98,7 +112,7 @@ export default {
                 this.$store.state.doc(
                   this.$store.state.db,
                   "Queue",
-                  documentId
+                  this.$store.state.documentId
                 ),
                 {
                   sdp: JSON.stringify(

@@ -1,9 +1,22 @@
 <template>
   <div class="controles-container">
-    <call-button class="call-button" />
-    <end-call-button class="end-call-button" />
-    <mute-button class="mute-button" />
-    <next-button class="next-button" />
+    <call-button v-if="$store.state.callState == 'idle'" class="call-button" />
+    <mute-button
+      v-if="$store.state.callState == 'connected'"
+      class="mute-button"
+    />
+    <end-call-button
+      v-if="
+        $store.state.callState == 'calling' ||
+        $store.state.callState == 'connected'
+      "
+      class="end-call-button"
+    />
+
+    <next-button
+      v-if="$store.state.callState == 'connected'"
+      class="next-button"
+    />
   </div>
 </template>
 
@@ -24,24 +37,13 @@ export default {
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
+  transition: 1s all;
 
   bottom: 0px;
 }
 
 img {
   cursor: pointer;
-}
-.call-button {
-  justify-self: center;
-}
-.end-call-button {
-  display: none;
-}
-.mute-button {
-  display: none;
-}
-.next-button {
-  display: none;
 }
 </style>

@@ -44,9 +44,10 @@ export default createStore({
             localVideo: null,
             remoteVideo: null,
             userId: uuidv4(),
+            documentId: "",
             peerConnection: new RTCPeerConnection(),
             dataChannel: null,
-            callState: null,
+            callState: "idle",
         }
     },
     mutations: {

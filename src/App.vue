@@ -2,6 +2,8 @@
   <main>
     <remote-video />
     <LocalVideo @click="dele" />
+
+    <Loading v-if="$store.state.callState == 'calling'" />
     <h1 class="call-state" id="call-state"></h1>
 
     <ControlesContainer />
@@ -12,8 +14,9 @@
 import ControlesContainer from "./components/ControlesContainer.vue";
 import LocalVideo from "./components/LocalVideo.vue";
 import RemoteVideo from "./components/RemoteVideo.vue";
+import Loading from "./components/Loading.vue";
 export default {
-  components: { ControlesContainer, LocalVideo, RemoteVideo },
+  components: { ControlesContainer, Loading, LocalVideo, RemoteVideo },
   name: "App",
   async created() {
     window.addEventListener("beforeunload", async (e) => {
@@ -60,7 +63,7 @@ export default {
   async mounted() {
     this.$store.state.localVideo = document.getElementById("local-video");
     this.$store.state.remoteVideo = document.getElementById("remote-video");
-    this.$store.state.callState = document.getElementById("call-state");
+    // this.$store.state.callState = document.getElementById("call-state");
 
     navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
       this.$store.state.localVideo.srcObject = stream;

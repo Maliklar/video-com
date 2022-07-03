@@ -2,6 +2,12 @@ export default {
     data() {
         return {}
     },
+    methods: {
+        resetConnection() {
+            this.$store.state.dataChannel = this.$store.state.peerConnection.createDataChannel("Data Channel");
+            this.$store.state.peerConnection = new RTCPeerConnection();
+        }
+    },
     created() {
 
         this.$store.state.dataChannel = this.$store.state.peerConnection.createDataChannel("Data Channel");
@@ -11,6 +17,7 @@ export default {
         };
 
         this.$store.state.dataChannel.onopen = () => {
+            this.$store.state.callState = "connected";
             console.log("CONNECTION OPENED");
         };
 
