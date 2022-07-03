@@ -7,6 +7,7 @@ export default {
   methods: {
     endCall() {
       this.resetConnection();
+
       this.$store.state.updateDoc(
         this.$store.state.doc(
           this.$store.state.db,

@@ -1,6 +1,6 @@
 <template>
   <div class="video-container" id="local-video-container">
-    <video id="local-video"></video>
+    <video id="local-video" autoplay></video>
   </div>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
   <div id="remote-video-container">
-    <video id="remote-video" src=""></video>
+    <video id="remote-video" src="" autoplay></video>
   </div>
 </template>
 
