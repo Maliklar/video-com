@@ -46,7 +46,7 @@ export default {
 
             this.$store.state.peerConnection.close();
             this.$store.state.peerConnection = new RTCPeerConnection(this.peerConnectionConfig);
-            navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
+            navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
                 this.$store.state.peerConnection.addStream(stream);
             });
             this.$store.state.dataChannel = this.$store.state.peerConnection.createDataChannel("Data Channel");

@@ -65,11 +65,13 @@ export default {
     this.$store.state.remoteVideo = document.getElementById("remote-video");
     // this.$store.state.callState = document.getElementById("call-state");
 
-    navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
-      this.$store.state.localVideo.srcObject = stream;
-      this.$store.state.localVideo.play();
-      this.$store.state.peerConnection.addStream(stream);
-    });
+    navigator.mediaDevices
+      .getUserMedia({ video: true, audio: true })
+      .then((stream) => {
+        this.$store.state.localVideo.srcObject = stream;
+        this.$store.state.localVideo.play();
+        this.$store.state.peerConnection.addStream(stream);
+      });
   },
 };
 </script>
