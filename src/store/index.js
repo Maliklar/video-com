@@ -2,6 +2,7 @@ import { createStore } from 'vuex'
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { collection, addDoc, deleteDoc, doc, query, getDoc, setDoc, where, getDocs, onSnapshot } from "firebase/firestore";
+import { v4 as uuidv4 } from "uuid";
 
 // Firebase
 
@@ -38,7 +39,12 @@ export default createStore({
             query,
             onSnapshot,
             deleteDoc,
-            setDoc
+            setDoc,
+            localVideo: null,
+            remoteVideo: null,
+            userId: uuidv4(),
+            peerConnection: new RTCPeerConnection(),
+            dataChannel: null,
         }
     },
     mutations: {

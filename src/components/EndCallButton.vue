@@ -1,5 +1,5 @@
 <template>
-  <div class="chat-box">Hello1</div>
+  <img src="../assets/end-call.png" alt="End Call Icon" />
 </template>
 
 <script>
