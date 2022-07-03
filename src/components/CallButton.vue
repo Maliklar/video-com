@@ -1,22 +1,38 @@
 <template>
-  <img src="../assets/call.png" @click="connect()" alt="Call Icon" />
+  <img
+    src="../assets/call.png"
+    @click="connect()"
+    id="call-icon"
+    alt="Call Icon"
+  />
 </template>
 
 <script>
 export default {
   methods: {
     async connect() {
-      console.log("Searching for Offers");
-      console.log(this.$store.state.localVideo);
+      const callIcon = document.getElementById("call-icon");
+      callIcon.style.display = "none";
+      let seconds = 0;
+      const waitingInterval = setInterval(() => {
+        seconds++;
+        this.$store.state.callState.innerHTML = "Wait " + seconds + " s";
+        if (seconds == 10) {
+          this.$store.state.callState.innerHTML = "No One found";
+          callIcon.style.display = "block";
 
+          clearInterval(waitingInterval);
+        }
+      }, 1000);
       // searching for peer
       const q = this.$store.state.query(
         this.$store.state.collection(this.$store.state.db, "Queue"),
-        this.$store.state.where("userId", "!=", this.$store.state.userId)
+        this.$store.state.where("userId", "!=", this.$store.state.userId),
+        this.$store.state.where("type", "==", "offer"),
+        this.$store.state.where("active", "==", true)
       );
       const querySnapshot = await this.$store.state.getDocs(q);
-      // const isEmpty = Ob
-      // ject.keys(querySnapshot).data().length === 0;
+      console.log(querySnapshot);
 
       if (querySnapshot.empty) {
         // create an offer and send it to the database
@@ -31,7 +47,7 @@ export default {
                 this.$store.state.collection(this.$store.state.db, "Queue"),
                 {
                   userId: this.$store.state.userId,
-                  scp: JSON.stringify(
+                  sdp: JSON.stringify(
                     this.$store.state.peerConnection.localDescription
                   ),
                   type: "offer",
@@ -56,42 +72,44 @@ export default {
                   : "Server";
                 console.log(source, " data: ", doc.data());
                 if (doc.data().type == "answer") {
-                  const scp = JSON.parse(doc.data().scp);
-                  console.log(scp);
-                  this.$store.state.peerConnection.setRemoteDescription(scp);
+                  const sdp = JSON.parse(doc.data().sdp);
+                  this.$store.state.peerConnection.setRemoteDescription(sdp);
                 }
               }
             );
           })
           .then(() => console.log("then"));
       } else {
-        querySnapshot.forEach((doc) => {
-          // doc.data() is never undefined for query doc snapshots
-          console.log(doc.id, " => ", doc.data());
-          const scp = JSON.parse(doc.data().scp);
+        const random = Math.floor(Math.random() * querySnapshot.docs.length);
+        const document = querySnapshot.docs[random].data();
+        const documentId = querySnapshot.docs[random].id;
 
-          this.$store.state.peerConnection.setRemoteDescription(scp);
-          this.$store.state.peerConnection
-            .createAnswer()
-            .then((answer) =>
-              this.$store.state.peerConnection.setLocalDescription(answer)
-            )
-            .then(async () => {
-              setTimeout(() => {
-                console.log(this.$store.state.peerConnection.localDescription);
+        const sdp = JSON.parse(document.sdp);
+        this.$store.state.peerConnection.setRemoteDescription(sdp);
 
-                this.$store.state.setDoc(
-                  this.$store.state.doc(this.$store.state.db, "Queue", doc.id),
-                  {
-                    scp: JSON.stringify(
-                      this.$store.state.peerConnection.localDescription
-                    ),
-                    type: "answer",
-                  }
-                );
-              }, 5000);
-            });
-        });
+        this.$store.state.peerConnection
+          .createAnswer()
+          .then((answer) =>
+            this.$store.state.peerConnection.setLocalDescription(answer)
+          )
+          .then(async () => {
+            setTimeout(() => {
+              this.$store.state.updateDoc(
+                this.$store.state.doc(
+                  this.$store.state.db,
+                  "Queue",
+                  documentId
+                ),
+                {
+                  sdp: JSON.stringify(
+                    this.$store.state.peerConnection.localDescription
+                  ),
+                  type: "answer",
+                  active: false,
+                }
+              );
+            }, 5000);
+          });
       }
     },
   },

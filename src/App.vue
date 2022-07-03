@@ -1,7 +1,7 @@
 <template>
   <main>
     <remote-video />
-    <LocalVideo />
+    <LocalVideo @click="dele" />
     <h1 class="call-state" id="call-state"></h1>
 
     <ControlesContainer />
@@ -16,12 +16,22 @@ export default {
   components: { ControlesContainer, LocalVideo, RemoteVideo },
   name: "App",
   async created() {
-    window.addEventListener("beforeunload", (e) => {
+    window.addEventListener("beforeunload", async (e) => {
       e.preventDefault();
       e.returnValue = "";
-      this.$store.state.deleteDoc(
-        this.$store.state.doc(this.$store.state.db, "Queue", this.userDocument)
+      const q = this.$store.state.query(
+        this.$store.state.collection(this.$store.state.db, "Queue"),
+        this.$store.state.where("userId", "==", this.$store.state.userId)
       );
+      const querySnapshot = await this.$store.state.getDocs(q);
+
+      querySnapshot.forEach((doc) => {
+        console.log(doc);
+
+        this.$store.state.deleteDoc(
+          this.$store.state.doc(this.$store.state.db, "Queue", doc.id)
+        );
+      });
     });
   },
 
@@ -31,15 +41,26 @@ export default {
     };
   },
   methods: {
-    dele() {
-      this.$store.state.deleteDoc(
-        this.$store.state.doc(this.$store.state.db, "Queue", this.userDocument)
+    async dele() {
+      const q = this.$store.state.query(
+        this.$store.state.collection(this.$store.state.db, "Queue"),
+        this.$store.state.where("userId", "==", this.$store.state.userId)
       );
+      const querySnapshot = await this.$store.state.getDocs(q);
+
+      querySnapshot.forEach((doc) => {
+        console.log(doc);
+
+        this.$store.state.deleteDoc(
+          this.$store.state.doc(this.$store.state.db, "Queue", doc.id)
+        );
+      });
     },
   },
   async mounted() {
     this.$store.state.localVideo = document.getElementById("local-video");
     this.$store.state.remoteVideo = document.getElementById("remote-video");
+    this.$store.state.callState = document.getElementById("call-state");
 
     navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
       this.$store.state.localVideo.srcObject = stream;

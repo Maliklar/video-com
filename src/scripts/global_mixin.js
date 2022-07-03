@@ -23,21 +23,4 @@ export default {
             this.$store.state.remoteVideo.play();
         };
     },
-    methods: {
-
-        setLocalVideo(vid) {
-            console.log(vid);
-
-            this.localVideo = vid;
-        },
-        async createOffer() {
-            this.peerConnection.createOffer()
-                .then(offer => this.peerConnection.setLocalDescription(offer));
-
-        },
-        async createAnswer() {
-            this.peerConnection.createAnswer()
-                .then(answer => this.peerConnection.setLocalDescription(answer));
-        }
-    }
 }
