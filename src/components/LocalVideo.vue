@@ -22,8 +22,6 @@ export default {
       this.mouseLeft = +e.clientX;
       this.mouseTop = +e.clientY;
       if (this.isHold) {
-        console.log();
-        console.log();
         this.video.style.top = this.mouseTop - window.innerHeight * 0.1 + "px";
         this.video.style.left = this.mouseLeft - window.innerWidth * 0.1 + "px";
       }
@@ -34,7 +32,6 @@ export default {
   },
   methods: {
     drag() {
-      console.log(this.video);
       this.isHold = true;
     },
   },

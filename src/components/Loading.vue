@@ -1,6 +1,10 @@
 <template>
   <div class="loading-container">
-    <img class="loading" src="../assets/Infinity-1s-200px.svg" alt="Loading" />
+    <img
+      class="loading"
+      src="../assets/Infinity-0.7s-197px.svg"
+      alt="Loading"
+    />
     <figcaption><h2>Connecting...</h2></figcaption>
   </div>
 </template>
