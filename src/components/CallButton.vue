@@ -43,7 +43,6 @@ export default {
         this.$store.state.where("active", "==", true)
       );
       const querySnapshot = await this.$store.state.getDocs(q);
-      console.log(querySnapshot);
 
       if (querySnapshot.empty) {
         // create an offer and send it to the database
@@ -65,7 +64,6 @@ export default {
                   type: "offer",
                 }
               );
-              console.log("Document written with ID: ", docRef.id);
               this.$store.state.documentId = docRef.id;
               this.userDocument = docRef.id;
             } catch (e) {
@@ -81,18 +79,13 @@ export default {
                 this.userDocument
               ),
               (doc) => {
-                const source = doc.metadata.hasPendingWrites
-                  ? "Local"
-                  : "Server";
-                console.log(source, " data: ", doc.data());
                 if (doc.data().type == "answer") {
                   const sdp = JSON.parse(doc.data().sdp);
                   this.$store.state.peerConnection.setRemoteDescription(sdp);
                 }
               }
             );
-          })
-          .then(() => console.log("then"));
+          });
       } else {
         const random = Math.floor(Math.random() * querySnapshot.docs.length);
         const document = querySnapshot.docs[random].data();

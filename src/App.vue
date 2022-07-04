@@ -29,8 +29,6 @@ export default {
       const querySnapshot = await this.$store.state.getDocs(q);
 
       querySnapshot.forEach((doc) => {
-        console.log(doc);
-
         this.$store.state.deleteDoc(
           this.$store.state.doc(this.$store.state.db, "Queue", doc.id)
         );
@@ -52,8 +50,6 @@ export default {
       const querySnapshot = await this.$store.state.getDocs(q);
 
       querySnapshot.forEach((doc) => {
-        console.log(doc);
-
         this.$store.state.deleteDoc(
           this.$store.state.doc(this.$store.state.db, "Queue", doc.id)
         );
