@@ -131,4 +131,14 @@ export default {
 </script>
 
 <style>
+img {
+  height: 80%;
+  border-radius: 100%;
+}
+
+img:hover {
+  transform: scale(1.2);
+  box-shadow: 0px 0px 10px black;
+  transition: all 1s;
+}
 </style>
