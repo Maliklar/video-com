@@ -10,29 +10,6 @@
 <script>
 export default {
   methods: {
-    // updateDocumentState(documentId) {
-    //   this.$store.state.updateDoc(
-    //     this.$store.state.doc(this.$store.state.db, "Queue", documentId),
-    //     {
-    //       active: false,
-    //     }
-    //   );
-    // },
-    // waitForResponse(documentId) {
-    //   const callIcon = document.getElementById("call-icon");
-    //   callIcon.style.display = "none";
-    //   let seconds = 0;
-    //   const waitingInterval = setInterval(() => {
-    //     seconds++;
-    //     this.$store.state.callState.innerHTML = "Wait " + seconds + " s";
-    //     if (seconds == 30) {
-    //       this.$store.state.callState.innerHTML = "No One found";
-    //       callIcon.style.display = "block";
-    //       this.updateDocumentState(documentId);
-    //       clearInterval(waitingInterval);
-    //     }
-    //   }, 1000);
-    // },
     async connect() {
       this.$store.state.callState = "calling";
       // searching for peer
@@ -100,22 +77,25 @@ export default {
             this.$store.state.peerConnection.setLocalDescription(answer)
           )
           .then(async () => {
-            setTimeout(() => {
-              this.$store.state.updateDoc(
-                this.$store.state.doc(
-                  this.$store.state.db,
-                  "Queue",
-                  this.$store.state.documentId
-                ),
-                {
-                  sdp: JSON.stringify(
-                    this.$store.state.peerConnection.localDescription
+            const waitForSDP = setInterval(() => {
+              if (this.$store.state.peerConnection.localDescription != null) {
+                this.$store.state.updateDoc(
+                  this.$store.state.doc(
+                    this.$store.state.db,
+                    "Queue",
+                    this.$store.state.documentId
                   ),
-                  type: "answer",
-                  active: false,
-                }
-              );
-            }, 5000);
+                  {
+                    sdp: JSON.stringify(
+                      this.$store.state.peerConnection.localDescription
+                    ),
+                    type: "answer",
+                    active: false,
+                  }
+                );
+                clearInterval(waitForSDP);
+              }
+            }, 200);
           });
       }
     },

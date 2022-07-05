@@ -1,22 +1,22 @@
 <template>
-  <main>
+  <main v-if="$store.state.permissionState">
     <remote-video />
     <LocalVideo @click="dele" />
-
     <Loading v-if="$store.state.callState == 'calling'" />
-    <h1 class="call-state" id="call-state"></h1>
-
     <ControlesContainer />
   </main>
+  <Refused v-else />
 </template>
+
 
 <script>
 import ControlesContainer from "./components/ControlesContainer.vue";
 import LocalVideo from "./components/LocalVideo.vue";
 import RemoteVideo from "./components/RemoteVideo.vue";
 import Loading from "./components/Loading.vue";
+import Refused from "./components/Refused.vue";
 export default {
-  components: { ControlesContainer, Loading, LocalVideo, RemoteVideo },
+  components: { ControlesContainer, Loading, LocalVideo, RemoteVideo, Refused },
   name: "App",
   async created() {
     window.addEventListener("beforeunload", async (e) => {
@@ -59,7 +59,6 @@ export default {
   async mounted() {
     this.$store.state.localVideo = document.getElementById("local-video");
     this.$store.state.remoteVideo = document.getElementById("remote-video");
-    // this.$store.state.callState = document.getElementById("call-state");
 
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
@@ -67,6 +66,9 @@ export default {
         this.$store.state.localVideo.srcObject = stream;
         this.$store.state.localVideo.play();
         this.$store.state.peerConnection.addStream(stream);
+      })
+      .catch(() => {
+        this.$store.state.permissionState = false;
       });
   },
 };
@@ -78,8 +80,8 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  background-color: #828282;
-  color: #2c3e50;
+  background-color: #350032;
+  color: #ffffff;
   height: 100vh;
   width: 100vw;
   margin: 0px;

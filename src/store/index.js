@@ -85,6 +85,7 @@ export default createStore({
             }),
             dataChannel: null,
             callState: "idle",
+            permissionState: true,
         }
     },
     mutations: {
