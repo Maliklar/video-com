@@ -3,7 +3,7 @@ node_modules
 /dist
 
 # firebase Keys
-src
+/src/store
 
 # local env files
 .env.local
